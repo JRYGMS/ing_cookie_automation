@@ -5,12 +5,8 @@ def test_ing_cookies_acceptance(page: Page, context: BrowserContext):
 
     browser_name = page.context.browser.browser_type.name
     print(f'Uruchomiono test na przeglądarce: {browser_name.upper()}')
-    
-    
-    context.set_extra_http_headers({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-        "Accept-Language": "pl-PL,pl;q=0.9, en-US;q=0.8, en;q=0.7"
-    })
+
+    page.add_init_script("delete navigator.__proto__.webdriver;")
 
     page.goto("https://www.ing.pl/", wait_until="domcontentloaded", timeout=60000)
 
