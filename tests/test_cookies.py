@@ -42,7 +42,7 @@ def test_ing_cookies_acceptance(page: Page, context: BrowserContext):
     print(f'[BADANIE] Ciasteczka po zakończeniu testu: {cookie_names}')
 
     new_cookies = set(cookie_names) - set(cookie_before)
-    print(f'[BADANIE] Nowe ciasteczka: {new_cookies}')
+    print(f'[BADANIE] Nowe ciasteczka analityczne: {new_cookies}')
 
     
     assert len(all_cookies) > 0, "Nie zapisano jakichkolwiek ciasteczek w pamięci"
