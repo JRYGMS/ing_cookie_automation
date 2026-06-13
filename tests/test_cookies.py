@@ -17,11 +17,15 @@ def test_ing_cookies_acceptance(page: Page, context: BrowserContext):
     cookie_before = [cookie['name'] for cookie in context.cookies()]
     print(f'[BADANIE] Ciasteczka przed rozpoczęciem testu: {cookie_before}')
 
-    
-    if "incap_ses" in "".join(cookie_before) and not page.get_by_role('button', name='Dostosuj').is_visible():
-        print(f'[CI/CD BLOKADA] Imperva Incapsula zablokowała publiczny adres IP Github')
-        pytest.skip("Test pominięty z powodu blokady Imperva Incapsula")   
-        return  
+    try:
+        page.get_by_role('button', name='Dostosuj').wait_for(state='visible', timeout=5000)
+    except Exception:
+        if "incap_ses" in "".join(cookie_before) and not page.get_by_role('button', name='Dostosuj').is_visible():
+            print(f'[CI/CD BLOKADA] Imperva Incapsula zablokowała publiczny adres IP Github')
+            pytest.skip("Test pominięty z powodu blokady Imperva Incapsula")                   
+            return 
+        else:
+            raise AssertionError("Nie znaleziono przycisku baneru cookies, mimo braku blokady firewall") 
 
     
     page.get_by_role('button', name='Dostosuj').click()
