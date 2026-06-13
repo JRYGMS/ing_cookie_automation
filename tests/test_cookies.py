@@ -18,7 +18,7 @@ def test_ing_cookies_acceptance(page: Page, context: BrowserContext):
     print(f'[BADANIE] Ciasteczka przed rozpoczęciem testu: {cookie_before}')
 
     try:
-        page.get_by_role('button', name='Dostosuj').wait_for(state='visible', timeout=5000)
+        page.get_by_role('button', name='Dostosuj').wait_for(state='visible', timeout=20000)
     except Exception:
         if "incap_ses" in "".join(cookie_before) and not page.get_by_role('button', name='Dostosuj').is_visible():
             print(f'[CI/CD BLOKADA] Imperva Incapsula zablokowała publiczny adres IP Github')
