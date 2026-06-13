@@ -15,8 +15,10 @@ def browser_context_args(browser_context_args):
     }
 
 def check_incapsula_block(page: Page, context: BrowserContext):
-    page.goto("https://www.ing.pl/", wait_until="domcontentloaded", timeout=60000)
     page.add_init_script("delete navigator.__proto__.webdriver;")
+    
+    page.goto("https://www.ing.pl/", wait_until="domcontentloaded", timeout=60000)
+
     cookies = [cookie['name'] for cookie in context.cookies()]
 
 
