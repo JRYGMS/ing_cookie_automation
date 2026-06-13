@@ -14,7 +14,7 @@ def browser_context_args(browser_context_args):
         }
     }
 
-def check_incapsula_block(page: Page, context: BrowserContext):
+def check_incapsula_block(page: Page, context: BrowserContext, browser_name: str):
     page.add_init_script("delete navigator.__proto__.webdriver;")
     
     page.goto("https://www.ing.pl/", wait_until="domcontentloaded", timeout=60000)
