@@ -15,7 +15,7 @@ Skrypt testuje aplikację w sposób synchroniczny i wieloprzeglądarkowy, badaj�
 
 ---
 # Stos technologiczny
-* **Język:** Python 3.11+
+* **Język:** Python 3.14 (lokalnie), 3.11 (GitHub)
 * **Framework:** Pytest
 * **Automatyzacja UI:** Playwright (Python Sync API)
 * **CI/CD:** GitHub Actions (Runner: Ubuntu 22.04)
