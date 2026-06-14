@@ -44,13 +44,13 @@ def test_ing_cookies_acceptance(page: Page, context: BrowserContext):
     accept_button.wait_for(state="hidden", timeout=7000)
 
     cookies_after = {cookie["name"] for cookie in context.cookies()}
-    new_cookies = cookies_after - cookies_before
+    new_cookies = set(cookies_after) - set(cookies_before)
 
     print(f"[DEBUG] Cookies po teście: {cookies_after}")
     print(f"[DEBUG] Nowe cookies: {new_cookies}")
 
-    assert cookies_after, "Brak cookies po interakcji z bannerem"
-    assert "cookiePolicyGDPR" in cookies_after, "Brak cookiePolicyGDPR po akceptacji cookies"
-    assert "cookiePolicyGDPR__details" in cookies_after, "Brak cookiePolicyGDPR__details po akceptacji cookies"
+    assert new_cookies, "Brak cookies po interakcji z bannerem"
+    assert "cookiePolicyGDPR" in new_cookies, "Brak cookiePolicyGDPR po akceptacji cookies"
+    assert "cookiePolicyGDPR__details" in new_cookies, "Brak cookiePolicyGDPR__details po akceptacji cookies"
 
     print("[OK] Cookies GDPR zostały poprawnie zapisane.")
