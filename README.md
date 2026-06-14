@@ -84,4 +84,10 @@ Podczas uruchamiania w publicznej chmurze GitHub Actions, testy celowo zwracają
   1. **Wyzwalacz:**
      Publiczne adresy IP maszyn wirtualnych GitHub Actions są automatycznie flagowane i blokowane przez zaporę sieciową     Imperva Incapsula, która chroni infrastrukturę banku ING. Zamiast właściwej strony, najprawdopodobniej wyświetlany jest ekran wyzwania (Challenge Page) 
   2. **Detekcja i Reakcja:** Framework za pomocą funkcji `check_and_skip_if_blocked` sprawdza obecność przycisku "Dostosuj". W przypadku wyświetlenia wyjątku PlaywrightTimeoutError bada pamięć podręczną pod kątem obecności ciasteczek `incap_ses`.
-  3. **Efekt (status SKIPPED):** Przy wykryciu blokady, test wywołuje funkcję `pytest.skip()`. Zapobiega to oznaczeniu testu na GitHub jako uszkodzonego z przyczyn niezależnych od jakości kodu (False Positives), jednocześnie logując napotkaną barierę bezpieczeństwa banku   
+  3. **Efekt (status SKIPPED):** Przy wykryciu blokady, test wywołuje funkcję `pytest.skip()`. Zapobiega to oznaczeniu testu na GitHub jako uszkodzonego z przyczyn niezależnych od jakości kodu (False Positives), jednocześnie logując napotkaną barierę bezpieczeństwa banku
+
+---
+
+## Test za pomocą playwright oraz VPN
+
+Po wykonaniu testu za pomocą komendy `playwright codegen https://www.ing.pl` przy użyciu darmowego narzędzia VPN, w widoku strony wyświetla się informacja o podejrzeniu przebywania za granicą oraz prośba o wykonanie testu *CAPCHA*. Z tego względu, test nie może zostać zrealizowany, ponieważ obiekty przewidziane w teście nie zostaną wyświetlone w cyklu testowym. Z tego względu, rezultatem testu jest odpowiedź SKIPPED.
