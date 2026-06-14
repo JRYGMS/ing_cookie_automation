@@ -169,6 +169,6 @@ W przypadku ruchu pochodzącego z adresu IP USA bądź Kanada (dla adresów z ty
 
 Warto zaznaczyć, że przy wykorzystaniu Niemieckiego adresu IP, test został zrealizowany, co może świadczyć o określonej puli adresów zagranicznych, które oflagowane są jako niebezpieczne lub podejrzane przez systemy zabezpieczeń serwera.
 
-W kolejnym kroku prosi o wykonanie `CAPCHA`, co dla testu jest niewykonalne (zgodnie z założeniami testu turringa). 
+W kolejnym kroku prosi o wykonanie `CAPTCHA`, co dla testu jest niewykonalne (zgodnie z założeniami testu Turinga). 
 
 W takim wypadku test nie przechodzi przez pełny scenariusz UI i oznaczony jest jako `SKIPPED`.
