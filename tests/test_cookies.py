@@ -1,16 +1,14 @@
 import pytest
-from playwright.sync_api import Page, BrowserContext
+from playwright.sync_api import Page
 
-def test_ing_cookies_acceptance(page: Page, context: BrowserContext):
-
+def test_ing_cookies_acceptance(page: Page):
+   
     browser_name = page.context.browser.browser_type.name
     print(f'Uruchomiono test na przeglądarce: {browser_name.upper()}')
-    page.goto("https://www.ing.pl/", wait_until="domcontentloaded", timeout=60000)
 
-    cookie_before = [cookie['name'] for cookie in context.cookies()]
+
+    cookie_before = [cookie['name'] for cookie in page.context.cookies()]
     print(f'[BADANIE] Ciasteczka przed rozpoczęciem testu: {cookie_before}')
-
-    
 
     
     page.get_by_role('button', name='Dostosuj').click()
@@ -18,7 +16,8 @@ def test_ing_cookies_acceptance(page: Page, context: BrowserContext):
     page.get_by_role('button', name='Zaakceptuj zaznaczone').click()
     page.wait_for_timeout(1000)
 
-    all_cookies = context.cookies()
+    
+    all_cookies = page.context.cookies()
     cookie_names = [cookie['name'] for cookie in all_cookies]
     print(f'[BADANIE] Ciasteczka po zakończeniu testu: {cookie_names}')
 
