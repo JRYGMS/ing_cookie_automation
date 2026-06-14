@@ -47,7 +47,7 @@ Skrypt testuje aplikację w sposób synchroniczny i wieloprzeglądarkowy, badaj�
      ```
      
   3. **Zainstaluj wymagane biblioteki(Pytest, Playwright oraz pluginy)**
-     Ze względu na to, że wymagane biblioteki znadują się w pliku `requirements.txt`, wystarczy wpisać:
+     Ze względu na to, że wymagane biblioteki znajdują się w pliku `requirements.txt`, wystarczy wpisać:
      ```bash
      #Windows
      pip install -r requirements.txt
