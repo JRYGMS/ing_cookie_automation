@@ -29,6 +29,7 @@ Skrypt testuje aplikację w sposób asynchroniczny i wieloprzeglądarkowy, badaj
      git clone [https://github.com/JRYGMS/ing_cookie_automation.git](https://github.com/JRYGMS/ing_cookie_automation.git)
      cd ing_cookie_automation
      ```
+     
   2. **Stwórz i aktywuj środowisko wirtualne:**
      **Tworzenie środowiska:**
      ```bash
@@ -46,7 +47,7 @@ Skrypt testuje aplikację w sposób asynchroniczny i wieloprzeglądarkowy, badaj
      ```
      
   3. **Zainstaluj wymagane biblioteki(Pytest, Playwright oraz pluginy)**
-     Ze względu na to, że wymagane biblioteki znadują się w pliku requirements.txt, wystarczy wpisać
+     Ze względu na to, że wymagane biblioteki znadują się w pliku `requirements.txt`, wystarczy wpisać:
      ```bash
      #Windows
      pip install -r requirements.txt
@@ -63,7 +64,7 @@ Skrypt testuje aplikację w sposób asynchroniczny i wieloprzeglądarkowy, badaj
      #macOS / Linux
      python3 -m playwright install --with-deps
      ```
-  Ta komenta automatycznie pobierze Chromium, Firefox, Webkita oraz niezbędne dla nich zależności systemowe.
+  *Ta komenda automatycznie pobierze Chromium, Firefox, Webkita oraz niezbędne dla nich zależności systemowe.*
 
   5. **Uruchom testy automatyczne:**
      ```bash
@@ -78,7 +79,9 @@ Skrypt testuje aplikację w sposób asynchroniczny i wieloprzeglądarkowy, badaj
 
 W projekcie skonfigurowano w pełni automatyczny pipeline w chmurze **GitHub Actions** (`.github/workflows/playwright.yml`), który uruchamia się przy każdym commicie.
 
-Podczas uruchamiania w publicznej chmurze GitHub Actions, testy celowo zwracają status **`3 skipped`**. Jest to zdarzenie świadome uwarunkowane określonymi okolicznościami:
+Podczas uruchamiania w publicznej chmurze GitHub Actions, testy celowo zwracają status `3 skipped`. Jest to zdarzenie świadome uwarunkowane określonymi okolicznościami:
 
-  1. **Wyzwalacz:** 
-     
+  1. **Wyzwalacz:**
+     Publiczne adresy IP maszyn wirtualnych GitHub Actions są automatycznie flagowane i blokowane przez zaporę sieciową     Imperva Incapsula, która chroni infrastrukturę banku ING. Zamiast właściwej strony, najprawdopodobniej wyświetlany jest ekran wyzwania (Challenge Page) 
+  2. **Detekcja i Reakcja:** Framework za pomocą funkcji `check_and_skip_if_blocked` sprawdza obecność przycisku "Dostosuj". W przypadku wyświetlenia wyjątku PlaywrightTimeoutError bada pamięć podręczną pod kątem obeności ciasteczek `incap_ses`.
+  3. **Efekt (status SKIPPED):** Przy wykryciu blokady, test wywołuje funkcję `pytest.skip()`. Zapobiega to oznaczeniu testu na GitHub jako uszkodzonego z przyczyn niezależnych od jakości kodu (False Positives), jednocześnie logując napotkaną barierę bezpieczeństwa banku   
