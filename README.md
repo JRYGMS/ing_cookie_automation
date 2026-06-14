@@ -165,8 +165,10 @@ Projekt realizuje wymagania zadania rekrutacyjnego poprzez:
 
 Podczas analizy zachowania aplikacji, z wykorzystaniem `playwritght codegen` oraz darmowego narzędzia VPN zaobserwowano, że strona ING.pl posiada restrykcyjne obostrzenia.
 
-W przypadku ruchu pochodzącego z adresu IP USA bądź Canada, system bezpieczeństwa ING wykrywa ruch jako anomalię i wyświetla informację o podejrzeniu przebywania za granicą.
+W przypadku ruchu pochodzącego z adresu IP USA bądź Kanada (dla adresów z tych regionów realizowany był test VPN), system bezpieczeństwa ING wykrywa ruch jako anomalię i wyświetla informację o podejrzeniu przebywania za granicą.
+
+Warto zaznaczyć, że przy wykorzystaniu Niemieckiego adresu IP, test został zrealizowany, co może świadczyć o określonej puli adresów zagranicznych, które oflagowane są jako niebezpieczne lub podejrzane przez systemy zabezpieczeń serwera.
 
 W kolejnym kroku prosi o wykonanie `CAPCHA`, co dla testu jest niewykonalne (zgodnie z założeniami testu turringa). 
 
-W takim wypadku test nie przechodzi przez pełny scenariusz UI i oznaczony jest ajko `SKIPPED`.
+W takim wypadku test nie przechodzi przez pełny scenariusz UI i oznaczony jest jako `SKIPPED`.
