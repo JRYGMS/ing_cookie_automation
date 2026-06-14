@@ -34,9 +34,7 @@ def test_ing_cookies_acceptance(page: Page, context: BrowserContext):
     page.get_by_role("button", name="Dostosuj").click()
 
    
-    toggle = page.locator(".cookie-policy-slider-thumb:right-of(:text('Cookies analityczne'))").first
-    toggle.wait_for(state="visible", timeout=7000)
-    toggle.click()
+    page.locator("div:nth-child(2) > .cookie-policy-switch > .cookie-policy-toggle-button > .cookie-policy-toggle-slider").click()
 
     
     accept_button = page.get_by_role("button", name="Zaakceptuj zaznaczone")
