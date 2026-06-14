@@ -1,84 +1,174 @@
-# ING Cookie Policy Automation
+# ING Cookie Policy Automation Projekt automatyzacji testów E2E realizujący zadanie rekrutacyjne polegające na weryfikacji działania mechanizmu zgód cookies na stronie **https://www.ing.pl**. 
+## Zakres testu 
+Scenariusz testowy 
+1. Wejście na stronę ing.pl
+2. Otworzenie menu konfiguracji cookies("Dostosuj")
+3. Wyrażenie zgody na cookies analityczne
+4. Kliknięcie "Zaakceptuj zaznaczone"
+5. Weryfikacja zapisania odpowiednich cookies w przeglądarce
 
-Projekt automatyzacji testów weryfikujący poprawność działania polityki prywatności oraz ciasteczek GDPR/PDGR na portalu **ING.pl**. 
+--- 
 
-Skrypt testuje aplikację w sposób asynchroniczny i wieloprzeglądarkowy, badając bezpośredni wpływ interakcji z UI na stan pamięci podręcznej (cookies) przeglądarki.
+## Cel projektu 
+Celem projektu jest automatyzacja weryfikacji działania banera cookies na stronie ING.pl w ramach zadania rekrutacyjnego. 
+Projekt skupia się na: 
+* symulacji realnej interakcji użytkownika z UI,
+* weryfikacji zmian w stanie cookies,
+* uruchamianiu testów w różnych przeglądarkach,
+*  integracji z pipeline CI/CD.
 
----
+--- 
 
-## Kluczowe cechy projektu
+## Wymagania niefunkcjonalne
+Test został zaprojektowany tak, aby był możliwie deterministyczny w ramach ograniczeń zewnętrznej aplikacji (ING.pl), między innymi poprzez:
+* pracę na stanie cookies przed i po akcji,
+* unikanie zależności od czasu UI,
+* jawne oczekiwanie na elementy DOM.
 
-* **Multi-browser Support:** Testy uruchamiają się równolegle na trzech silnikach: **Chromium**, **Firefox** oraz **WebKit** (Safari).
-* **Deep Cookie Inspection:** Test nie ogranicza się do klikania – pobiera stan ciasteczek przed i po akcji, a następnie za pomocą operacji na zbiorach (`set()`) weryfikuje obecność konkretnych tokenów (np. `cookiePolicyGDPR`).
-* **Zrównoleglenie (Parallel Execution):** Wykorzystanie wtyczki `pytest-xdist` pozwala na maksymalne skrócenie czasu wykonania (lokalny test na 16 wątkach trwa nieco ponad **5 sekund**).
-* **Odporność CI/CD (Cybersec Aware):** Skrypt posiada wbudowaną logikę detekcji systemów ochrony Enterprise (Imperva Incapsula), co gwarantuje stabilność potoku w chmurze.
+--- 
 
----
-# Stos technologiczny
-* **Język:** Python 3.11+
+## Stos technologiczny 
+* **Język:** Python 3.11
 * **Framework:** Pytest
 * **Automatyzacja UI:** Playwright (Python Sync API)
 * **CI/CD:** GitHub Actions (Runner: Ubuntu 22.04)
 
-  ---
+--- 
 
-  #Instrukcja instalacji i uruchomienia (lokalnie)
-
-  1. **Sklonuj repozytorium:**
-     ```bash
-     git clone [https://github.com/JRYGMS/ing_cookie_automation.git](https://github.com/JRYGMS/ing_cookie_automation.git)
+## Instrukcja instalacji i uruchomienia (lokalnie)
+**Sklonuj repozytorium:**
+```bash
+     git clone https://github.com/JRYGMS/ing_cookie_automation.git
      cd ing_cookie_automation
-     ```
-  2. **Stwórz i aktywuj środowisko wirtualne:**
-     **Tworzenie środowiska:**
-     ```bash
+```
+
+**Stwórz i aktywuj środowisko wirtualne:** 
+
+*Tworzenie środowiska:*
+
+```bash
      #Windows
      python -m venv .venv
      #macOS / Linux
      python3 -m venv .venv
-     ```
-     **Aktywacja Środowiska:**
-     ```bash
+```
+
+*Aktywacja Środowiska:*
+
+```bash
      #Windows (PowerShell)
-     .\.venv\Scripts\activate.ps1
+     .venv\Scripts\activate
      #macOS / Linux
      source .venv\bin\activate
-     ```
-     
-  3. **Zainstaluj wymagane biblioteki(Pytest, Playwright oraz pluginy)**
-     Ze względu na to, że wymagane biblioteki znadują się w pliku requirements.txt, wystarczy wpisać
-     ```bash
+```
+**Zainstaluj wymagane biblioteki (Pytest, Playwright oraz pluginy)** 
+
+Biblioteki znajdują się w pliku `requirements.txt`, dlatego wykonujemy poniższe komendy:
+
+```bash
      #Windows
      pip install -r requirements.txt
 
      #macOS / Linux
      pip3 install -r requirements.txt
-     ```
-
-  4. **Zainstaluj binarne silniki przeglądarek dla Playwright:**
-     ```bash
+```
+**Zainstaluj binarne silniki przeglądarek dla Playwright:**
+```bash
      #Windows
      python -m playwright install --with-deps
 
      #macOS / Linux
      python3 -m playwright install --with-deps
-     ```
-  Ta komenta automatycznie pobierze Chromium, Firefox, Webkita oraz niezbędne dla nich zależności systemowe.
+```
 
-  5. **Uruchom testy automatyczne:**
-     ```bash
+*Ta komenda automatycznie pobierze Chromium, Firefox, WebKit oraz niezbędne dla nich zależności systemowe.*
+
+
+**Uruchom testy automatyczne:**
+```bash
      pytest
-     ```
+```
 
-     Konfiguracja pliku  `pytest.ini` automatycznie wykryje testy w folderze `tests/`, dobierze liczbę wątków dla procesora `pytest-xdist` oraz przetestuje 3 przeglądarki równolegle.
+--- 
+## Testy wieloprzeglądarkowe 
+Testy uruchamiane są równolegle na trzech silnikach przeglądarkowych: 
+* Chromium (Chrome, Edge)
+* Firefox
+* WebKit (Safari)
+  
+Wykorzystano mechanizm Playwright fixtures oraz `pytest-xdist` do równoległego wykonania testów
+
+--- 
+
+## Architektura CI/CD & Raport GitHub Actions 
+Projekt zawiera pipeline automatyzujący uruchamianie testów w środowisku GitHub Actions. 
+
+Plik workflow:
+
+`.github/workflows/playwright.yml`
+
+Pipeline: 
+* instaluje zależności,
+* instaluje przeglądarki Playwright,
+* uruchamia testy(pytest z wykorzystaniem pytest-xdist),
+* wykonuje je równolegle.
+
+--- 
+
+## Zachowanie w CI
+W środowisku GitHub Actions testy mogą być oznaczone jako SKIPPED. 
+
+Powód: 
+
+* publiczne adresy IP runnerów mogą być blokowane przez systemy ochrony (np. Imperva/WAF),
+* w takim przypadku aplikacja nie zwraca standardowego widoku banera cookies.
+* Testy wykrywają tę sytuację i świadomie wykonują pytest.skip(), aby uniknąć fałszywie negatywnych wyników.
+
+--- 
+
+## Założenia projektu 
+* Test dotyczy zewnętrznej aplikacji (ING.pl), której kod źródłowy jest nieznany (nie posiadamy konkretnych identyfikatory przycisków oraz suwaków).
+* Selektory UI mogą ulegać zmianie wraz z aktualizacją strony.
+* Kluczowym elementem testu jest weryfikacja zmian w cookies, a nie implementacja UI.
 
 ---
 
-## Architektura CI/CD & Raport GitHub Actions
+## Struktura projektu
+```bash
+tests/
+  test_ing_cookies.py
 
-W projekcie skonfigurowano w pełni automatyczny pipeline w chmurze **GitHub Actions** (`.github/workflows/playwright.yml`), który uruchamia się przy każdym commicie.
+conftest.py
+requirements.txt
+pytest.ini
 
-Podczas uruchamiania w publicznej chmurze GitHub Actions, testy celowo zwracają status **`3 skipped`**. Jest to zdarzenie świadome uwarunkowane określonymi okolicznościami:
+.github/
+  workflows/
+    playwright.yml
+```
 
-  1. **Wyzwalacz:** 
-     
+---
+
+## Podsumowanie 
+
+Projekt realizuje wymagania zadania rekrutacyjnego poprzez:
+
+* automatyzację scenariusza testowego w Playwright,
+* weryfikację zmian w cookies po interakcji użytkownika,
+* obsługę wielu przeglądarek,
+* równoległe wykonanie testów,
+* integracja z GitHub Actions.
+
+---
+
+## Ograniczenie środowiskowe związane z CAPCHA
+
+Podczas analizy zachowania aplikacji, z wykorzystaniem `playwritght codegen` oraz darmowego narzędzia VPN zaobserwowano, że strona ING.pl posiada restrykcyjne obostrzenia.
+
+W przypadku ruchu pochodzącego z adresu IP USA bądź Kanada (dla adresów z tych regionów realizowany był test VPN), system bezpieczeństwa ING wykrywa ruch jako anomalię i wyświetla informację o podejrzeniu przebywania za granicą.
+
+Warto zaznaczyć, że przy wykorzystaniu Niemieckiego adresu IP, test został zrealizowany, co może świadczyć o określonej puli adresów zagranicznych, które oflagowane są jako niebezpieczne lub podejrzane przez systemy zabezpieczeń serwera.
+
+W kolejnym kroku prosi o wykonanie `CAPCHA`, co dla testu jest niewykonalne (zgodnie z założeniami testu turringa). 
+
+W takim wypadku test nie przechodzi przez pełny scenariusz UI i oznaczony jest jako `SKIPPED`.
