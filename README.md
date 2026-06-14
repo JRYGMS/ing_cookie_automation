@@ -2,7 +2,7 @@
 
 Projekt automatyzacji testów weryfikujący poprawność działania polityki prywatności oraz ciasteczek GDPR/PDGR na portalu **ING.pl**. 
 
-Skrypt testuje aplikację w sposób asynchroniczny i wieloprzeglądarkowy, badając bezpośredni wpływ interakcji z UI na stan pamięci podręcznej (cookies) przeglądarki.
+Skrypt testuje aplikację w sposób synchroniczny i wieloprzeglądarkowy, badając bezpośredni wpływ interakcji z UI na stan pamięci podręcznej (cookies) przeglądarki.
 
 ---
 
@@ -22,11 +22,11 @@ Skrypt testuje aplikację w sposób asynchroniczny i wieloprzeglądarkowy, badaj
 
   ---
 
-  #Instrukcja instalacji i uruchomienia (lokalnie)
+  # Instrukcja instalacji i uruchomienia (lokalnie)
 
   1. **Sklonuj repozytorium:**
      ```bash
-     git clone [https://github.com/JRYGMS/ing_cookie_automation.git](https://github.com/JRYGMS/ing_cookie_automation.git)
+     git clone https://github.com/JRYGMS/ing_cookie_automation.git
      cd ing_cookie_automation
      ```
      
@@ -83,5 +83,5 @@ Podczas uruchamiania w publicznej chmurze GitHub Actions, testy celowo zwracają
 
   1. **Wyzwalacz:**
      Publiczne adresy IP maszyn wirtualnych GitHub Actions są automatycznie flagowane i blokowane przez zaporę sieciową     Imperva Incapsula, która chroni infrastrukturę banku ING. Zamiast właściwej strony, najprawdopodobniej wyświetlany jest ekran wyzwania (Challenge Page) 
-  2. **Detekcja i Reakcja:** Framework za pomocą funkcji `check_and_skip_if_blocked` sprawdza obecność przycisku "Dostosuj". W przypadku wyświetlenia wyjątku PlaywrightTimeoutError bada pamięć podręczną pod kątem obeności ciasteczek `incap_ses`.
+  2. **Detekcja i Reakcja:** Framework za pomocą funkcji `check_and_skip_if_blocked` sprawdza obecność przycisku "Dostosuj". W przypadku wyświetlenia wyjątku PlaywrightTimeoutError bada pamięć podręczną pod kątem obecności ciasteczek `incap_ses`.
   3. **Efekt (status SKIPPED):** Przy wykryciu blokady, test wywołuje funkcję `pytest.skip()`. Zapobiega to oznaczeniu testu na GitHub jako uszkodzonego z przyczyn niezależnych od jakości kodu (False Positives), jednocześnie logując napotkaną barierę bezpieczeństwa banku   
