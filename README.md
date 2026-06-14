@@ -10,7 +10,7 @@ Scenariusz testowy
 --- 
 
 ## Cel projektu 
-Celem projektu jest automatyzacja weryfikacji działania bannera cookies na stronie ING.pl w ramach zadania rekrutacyjnego. 
+Celem projektu jest automatyzacja weryfikacji działania banera cookies na stronie ING.pl w ramach zadania rekrutacyjnego. 
 Projekt skupia się na: 
 * symulacji realnej interakcji użytkownika z UI,
 * weryfikacji zmian w stanie cookies,
@@ -20,7 +20,6 @@ Projekt skupia się na:
 --- 
 
 ## Wymagania niefunkcjonalne
-Powtarzalność testów 
 Test został zaprojektowany tak, aby był możliwie deterministyczny w ramach ograniczeń zewnętrznej aplikacji (ING.pl), między innymi poprzez:
 * pracę na stanie cookies przed i po akcji,
 * unikanie zależności od czasu UI,
@@ -36,14 +35,16 @@ Test został zaprojektowany tak, aby był możliwie deterministyczny w ramach og
 
 --- 
 
-## Instrukcja instalacji i uruchomienia (lokalnie) 1. 
+## Instrukcja instalacji i uruchomienia (lokalnie)
 **Sklonuj repozytorium:**
 ```bash
      git clone https://github.com/JRYGMS/ing_cookie_automation.git
      cd ing_cookie_automation
 ```
 
-**Stwórz i aktywuj środowisko wirtualne:** **Tworzenie środowiska:**
+**Stwórz i aktywuj środowisko wirtualne:** 
+
+*Tworzenie środowiska:*
 
 ```bash
      #Windows
@@ -51,16 +52,18 @@ Test został zaprojektowany tak, aby był możliwie deterministyczny w ramach og
      #macOS / Linux
      python3 -m venv .venv
 ```
-**Aktywacja Środowiska:**
+
+*Aktywacja Środowiska:*
+
 ```bash
      #Windows (PowerShell)
      .venv\Scripts\activate
      #macOS / Linux
      source .venv\bin\activate
 ```
-**Zainstaluj wymagane biblioteki(Pytest, Playwright oraz pluginy)** 
+**Zainstaluj wymagane biblioteki (Pytest, Playwright oraz pluginy)** 
 
-Biblioteki znajdują się w pliku requirements.txt, dlatego:
+Biblioteki znajdują się w pliku `requirements.txt`, dlatego wykonujemy poniższe komendy:
 
 ```bash
      #Windows
@@ -77,7 +80,10 @@ Biblioteki znajdują się w pliku requirements.txt, dlatego:
      #macOS / Linux
      python3 -m playwright install --with-deps
 ```
+
 *Ta komenda automatycznie pobierze Chromium, Firefox, WebKit oraz niezbędne dla nich zależności systemowe.*
+
+
 **Uruchom testy automatyczne:**
 ```bash
      pytest
@@ -85,36 +91,43 @@ Biblioteki znajdują się w pliku requirements.txt, dlatego:
 
 --- 
 ## Testy wieloprzeglądarkowe 
-Testy uruchamiane są równolegle w trzech przeglądarkach: 
-* Chromium
+Testy uruchamiane są równolegle na trzech silnikach przeglądarkowych: 
+* Chromium (Chrome, Edge)
 * Firefox
-* WebKit
+* WebKit (Safari)
+  
 Wykorzystano mechanizm Playwright fixtures oraz `pytest-xdist` do równoległego wykonania testów
 
 --- 
 
 ## Architektura CI/CD & Raport GitHub Actions 
 Projekt zawiera pipeline automatyzujący uruchamianie testów w środowisku GitHub Actions. 
-Plik workflow: 
+
+Plik workflow:
+
 `.github/workflows/playwright.yml`
 
 Pipeline: 
 * instaluje zależności,
 * instaluje przeglądarki Playwright,
-* uruchamia testy(pytest + pytest-xdist),
+* uruchamia testy(pytest z wykorzystaniem pytest-xdist),
 * wykonuje je równolegle.
 
 --- 
 
-## Zachowanie w CI (ważne) W środowisku GitHub Actions testy mogą być oznaczone jako SKIPPED. 
+## Zachowanie w CI
+W środowisku GitHub Actions testy mogą być oznaczone jako SKIPPED. 
+
 Powód: 
+
 * publiczne adresy IP runnerów mogą być blokowane przez systemy ochrony (np. Imperva/WAF),
-* w takim przypadku aplikacja nie zwraca standardowego widoku banera cookies. Testy wykrywają tę sytuację i świadomie wykonują pytest.skip(), aby uniknąć fałszywie negatywnych wyników.
+* w takim przypadku aplikacja nie zwraca standardowego widoku banera cookies.
+* Testy wykrywają tę sytuację i świadomie wykonują pytest.skip(), aby uniknąć fałszywie negatywnych wyników.
 
 --- 
 
 ## Założenia projektu 
-* Test dotyczy zewnętrznej aplikacji (ING.pl), nad którą brak kontroli.
+* Test dotyczy zewnętrznej aplikacji (ING.pl), której kod źródłowy jest nieznany (nie posiadamy konkretnych identyfikatory przycisków oraz suwaków).
 * Selektory UI mogą ulegać zmianie wraz z aktualizacją strony.
 * Kluczowym elementem testu jest weryfikacja zmian w cookies, a nie implementacja UI.
 
@@ -136,14 +149,24 @@ pytest.ini
 
 ---
 
-## Podsumowanie Projekt realizuje wymagania zadania rekrutacyjnego poprzez:
+## Podsumowanie 
+
+Projekt realizuje wymagania zadania rekrutacyjnego poprzez:
 
 * automatyzację scenariusza testowego w Playwright,
 * weryfikację zmian w cookies po interakcji użytkownika,
-* obsługę wielu przeglądarek, * równoległe wykonanie testów,
+* obsługę wielu przeglądarek,
+* równoległe wykonanie testów,
 * integracja z GitHub Actions.
 
 ---
 
-## Test z wykorzystaniem Playwright oraz VPN
-Po wykonaniu testu za pomocą komendy `playwright codegen https://www.ing.pl` przy użyciu darmowego narzędzia VPN, w widoku strony wyświetla się informacja o podejrzeniu przebywania za granicą oraz prośba o wykonanie testu `CAPCHA`. Z tego względu, test nie może zostać zrealizowany, ponieważ obiekty przewidziane w teście nie zostaną wyświetlone w cyklu testowym. Z tego względu, rezultatem testu jest odpowiedź `SKIPPED`.
+## Ograniczenie środowiskowe związane z CAPCHA
+
+Podczas analizy zachowania aplikacji, z wykorzystaniem `playwritght codegen` oraz darmowego narzędzia VPN zaobserwowano, że strona ING.pl posiada restrykcyjne obostrzenia.
+
+W przypadku ruchu pochodzącego z adresu IP USA bądź Canada, system bezpieczeństwa ING wykrywa ruch jako anomalię i wyświetla informację o podejrzeniu przebywania za granicą.
+
+W kolejnym kroku prosi o wykonanie `CAPCHA`, co dla testu jest niewykonalne (zgodnie z założeniami testu turringa). 
+
+W takim wypadku test nie przechodzi przez pełny scenariusz UI i oznaczony jest ajko `SKIPPED`.
