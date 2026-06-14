@@ -35,4 +35,4 @@ jobs:
 
     
     - name: Run Playwright tests
-      run: pytest -p no:xdist -s --browser ${{ matrix.browser }}
+      run: pytest
